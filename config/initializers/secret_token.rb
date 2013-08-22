@@ -9,4 +9,6 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Eliminator::Application.config.secret_key_base = ENV['RAILS_SECRET_TOKEN'] || 1234567890
+#Eliminator::Application.config.secret_key_base = ENV['RAILS_SECRET_TOKEN'] || 1234567890
+
+Eliminator::Application.config.secret_token = "i"*64
