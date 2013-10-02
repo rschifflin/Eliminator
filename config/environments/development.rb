@@ -29,4 +29,7 @@ Eliminator::Application.configure do
 
   # Use Letter Opener for mail in development
   config.action_mailer.delivery_method = :letter_opener
+
+  #Devise default mailer
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 end
