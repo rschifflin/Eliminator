@@ -1,13 +1,15 @@
 require 'spec_helper'
 
 describe Week do
+  it { should validate_presence_of :season }
+  it { should belong_to :season }
+  it { should have_many :games }
+
   it "has a week number" do
     season = create(:season, year: 2014)
     week = create(:week, week_no: 5, season: season)
     expect(week.week_no).to eq 5
   end
-
-  it { should validate_presence_of :season }
 
   it "use the correct week number based on the season" do
     old_season = create(:season, year: 2013) 

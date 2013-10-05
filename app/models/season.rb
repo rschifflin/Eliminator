@@ -10,6 +10,7 @@
 
 class Season < ActiveRecord::Base
   has_many :weeks
+  has_many :games, through: :weeks
 
   def assign_next_week_no
     @latest_week_no ||= 0

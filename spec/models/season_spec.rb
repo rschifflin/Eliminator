@@ -1,8 +1,12 @@
 require 'spec_helper'
 
 describe Season do
+  it { should have_many(:weeks) }
+  it { should have_many(:games).through(:weeks) }
+  
   let(:season) { create(:season) }
   let(:week) { create(:week, season: season) }
+
 
   it "has a year" do
     good_season = create(:season, year: 1999)

@@ -10,9 +10,10 @@
 #
 
 class Week < ActiveRecord::Base
-  validates :season, presence: true
   belongs_to :season
+  has_many :games
 
+  validates :season, presence: true
   before_save :set_week_no
 
 private
