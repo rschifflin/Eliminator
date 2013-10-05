@@ -23,7 +23,6 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 require 'factory_girl'
 # Require our Database Cleaner to clean up after ourselves
 require 'database_cleaner'
-DatabaseCleaner.strategy = :truncation
 # Require draper helpers
 require 'draper/test/rspec_integration'
 RSpec.configure do |config|
@@ -71,6 +70,12 @@ RSpec.configure do |config|
   end
 
   # Since we are using factories we must clean up
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
+  end
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
   config.after(:each) do
     DatabaseCleaner.clean
   end
