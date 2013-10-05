@@ -88,6 +88,9 @@ group :development, :test do
   # Factories are nicer than fixtures so we'll use factory girl.
   gem 'factory_girl_rails'
 
+  # Faker is nice for filling in factories
+  gem 'faker'
+
   # We need to clean up after our factories so we'll use database_cleaner
   gem 'database_cleaner'
 

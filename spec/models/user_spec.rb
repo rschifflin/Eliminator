@@ -10,5 +10,10 @@ describe User do
     user = create(:user, username: "FrankBank", email: "Frank@Bank.com", password: "password", password_confirmation: "password") 
     expect(user.email).to eq("frank@bank.com")
   end
+
+  specify "User has a factory" do
+    user = create(:user)
+    expect(user).to be_valid
+  end
 end
 
