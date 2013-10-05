@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  week_no    :integer
-#  season     :integer
+#  season_id  :integer
 #  created_at :datetime
 #  updated_at :datetime
 #
