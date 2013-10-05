@@ -19,7 +19,7 @@ class Team < ActiveRecord::Base
   end
 
   def games
-    return (self.home_games + self.away_games).uniq
+    (self.home_games + self.away_games).uniq
   end
 
 end

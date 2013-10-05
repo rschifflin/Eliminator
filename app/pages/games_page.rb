@@ -2,7 +2,7 @@ class GamesPage
   include Capybara::DSL
 
   def current_games
-    return page.all("ul#game-list li.game-entry")
+    page.all("ul#game-list li.game-entry")
   end
 
 private

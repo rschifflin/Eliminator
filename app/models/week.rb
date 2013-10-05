@@ -20,7 +20,7 @@ private
 
   def set_week_no
     self.week_no = season.assign_next_week_no if self.week_no.nil?
-    return true
+    true
   end
 
 end
