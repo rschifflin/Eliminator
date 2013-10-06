@@ -3,9 +3,9 @@ class BetsController < ApplicationController
 
   def create
     bet = Bet.create(bet_params)
-    flash[:bet] = bet.errors.full_messages if bet.invalid?
+    flash[:notice] = bet.errors.full_messages if bet.invalid?
 
-    redirect_to games_path
+    redirect_to week_games_path(Week.current)
   end 
 
 private

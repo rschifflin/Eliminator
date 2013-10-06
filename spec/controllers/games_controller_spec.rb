@@ -9,10 +9,15 @@ describe GamesController do
     before { sign_in user }
 
     describe "#index" do
+      let!(:week) { create(:week) }
       it "sets the current user's most recent bet as @bet" do
-        get :index
+        get :index, {week: week}
         expect(assigns["bet"]).to eq bet
       end
+       it "sets the week as @week" do
+        get :index, {week_id: week.id}
+        expect(assigns["week"]).to eq week
+       end
     end
   end
 

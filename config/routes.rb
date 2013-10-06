@@ -7,7 +7,10 @@ Eliminator::Application.routes.draw do
   root to: 'games#index'
   get '/home' => 'games#index' 
 
-  resources :games
+  resources :weeks do
+    resources :games
+  end
+
   resources :bets
 
   # The priority is based upon order of creation: first created -> highest priority.
