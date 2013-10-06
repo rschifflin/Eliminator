@@ -22,4 +22,14 @@ describe GamesPage do
       expect(GamesPage.new.current_bet_display).to eq("Minnesota Vikings")
     end
   end
+
+  describe "#place_bet" do
+    let(:season) { create(:season) }
+    let(:week) { create(:week, season: season) }
+    let(:games) { create_list(:game, 10, week: week) }
+
+    it "clicks on the bet button for a team" do
+
+    end
+  end
 end

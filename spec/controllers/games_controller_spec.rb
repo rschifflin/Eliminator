@@ -6,9 +6,7 @@ describe GamesController do
   context "With a signed-in user with a current bet" do
     let(:user) { create(:user) }
     let!(:bet) { create(:bet, user: user) }
-    before do 
-      sign_in user 
-    end
+    before { sign_in user }
 
     describe "#index" do
       it "sets the current user's most recent bet as @bet" do
@@ -47,5 +45,4 @@ describe GamesController do
       end
     end
   end
-
 end
