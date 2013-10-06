@@ -8,23 +8,18 @@ describe GamesPage do
 
     it "returns an array of this week's games" do
       Capybara.stub(:current_session) do
-        Capybara.string( <<-eos)
-          <html>
-            <head>
-            </head>
-            <body>
-              <ul id="game-list">
-                <li class="game-entry">Game 1</li>
-                <li class="game-entry">Game 2</li>
-                <li class="game-entry">Game 3</li>
-              </ul>
-            </body>
-          </html> 
-        eos
+        Capybara.string( File.read("#{File.dirname(__FILE__)}/html/example1.html") )
       end
       games_page = GamesPage.new
 
       expect(games_page.current_games.size).to eq 3
+    end
+
+    it "displays the current user's bet this week" do
+      Capybara.stub(:current_session) do
+        Capybara.string( File.read("#{File.dirname(__FILE__)}/html/example1.html") )
+      end
+      expect(GamesPage.new.current_bet_display).to eq("Minnesota Vikings")
     end
   end
 end

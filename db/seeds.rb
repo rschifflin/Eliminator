@@ -5,6 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+user = User.where(email: "frank@bank.com").first_or_create(username: "Frank Bank", password: "password", password_confirmation: "password")
 season = Season.where(year: 2013).first_or_create
 week = Week.where(season: season).first_or_create
 

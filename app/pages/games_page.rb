@@ -1,13 +1,12 @@
-class GamesPage
-  include Capybara::DSL
+require "#{Rails.root}/app/pages/page_object.rb"
+class GamesPage < PageObject
 
   def current_games
     page.all("ul#game-list li.game-entry")
   end
 
-private
-  def page
-    @page ||= Capybara.current_session
+  def current_bet_display
+    page.find(".current-bet").text
   end
 
 end

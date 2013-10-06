@@ -78,6 +78,7 @@ group :development, :test do
 
   # Feature specs are much nicer with capybara
   gem 'capybara'
+  gem 'selenium-webdriver'
 
   # Since we likely will have some javascript, we'll use poltergeist with capybara
   gem 'poltergeist'

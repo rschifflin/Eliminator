@@ -25,4 +25,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :bets
+
+  def current_bet
+    return nil if self.bets.empty? 
+    bet = self.bets.select { |b| b.week == Week.current }.first
+  end
 end

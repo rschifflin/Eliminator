@@ -24,4 +24,11 @@ class Bet < ActiveRecord::Base
   belongs_to :week
   belongs_to :user
   validates_with UniqueBetValidator
+  before_save :replace_old_bet 
+
+private
+  def replace_old_bet
+    Bet.where("user_id = ? AND week_id = ?", user, week).first.try(:destroy)
+  end
+  
 end

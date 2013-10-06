@@ -42,6 +42,23 @@ describe Bet do
     expect(bet_duplicate).to be_valid
   end
 
+  specify "The same user saving a bet in the same week will overwrite his previous bet" do
+    old_team = create(:team, name: "Oldies")
+    new_team = create(:team, name: "Newbies")
+    bet_old = create(:bet, user: user, week: week, team: old_team)
+    bet_new = create(:bet, user: user, week: week, team: new_team)
+    expect(user.bets).to eq [bet_new]
+  end
+
+  specify "The same user saving a bet in different weeks will not overrite his previous bet" do
+    new_week = create(:week, season: season)
+    old_team = create(:team, name: "Oldies")
+    new_team = create(:team, name: "Newbies")
+    bet_old = create(:bet, user: user, week: week, team: old_team)
+    bet_new = create(:bet, user: user, week: new_week, team: new_team)
+    expect(user.bets).to include(bet_old, bet_new)
+  end
+
   specify "Bet has a factory" do
     expect(create(:bet)).to be_valid
   end

@@ -16,6 +16,11 @@ class Week < ActiveRecord::Base
   validates :season, presence: true
   before_save :set_week_no
 
+  def self.current
+    return nil unless current_season = Season.current
+    current_season.weeks.max_by{ |w| w.week_no }
+  end
+
 private
 
   def set_week_no
