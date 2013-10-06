@@ -4,8 +4,8 @@ Eliminator::Application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
-  root to: 'games#index'
-  get '/home' => 'games#index' 
+  root to: 'static#home'
+  get '/home' => 'static#home' 
 
   resources :weeks do
     resources :games

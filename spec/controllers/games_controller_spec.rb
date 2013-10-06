@@ -11,7 +11,7 @@ describe GamesController do
     describe "#index" do
       let!(:week) { create(:week) }
       it "sets the current user's most recent bet as @bet" do
-        get :index, {week: week}
+        get :index, {week_id: week.id}
         expect(assigns["bet"]).to eq bet
       end
        it "sets the week as @week" do
@@ -33,7 +33,7 @@ describe GamesController do
     end
 
     it "leaves @bet as nil" do
-      get :index
+      get :index, {week_id: new_week.id}
       expect(assigns["bet"]).to be_nil
     end 
   end
@@ -41,11 +41,12 @@ describe GamesController do
   context "Without a signed-in user" do
     let(:user) { create(:user) }
     let(:bet) { create(:bet, user: user) }
+    let(:week) { create(:week) }
     before { bet }
 
     describe "#index" do
       it "leaves @bet as nil" do
-        get :index
+        get :index, {week_id: week.id}
         expect(assigns["bet"]).to be_nil
       end
     end
