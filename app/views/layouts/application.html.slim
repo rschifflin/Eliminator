@@ -23,9 +23,15 @@ head
 
 body
   = render 'shared/header'
-  p.notice= notice
-  p.alert= alert
-
-  == yield
+  .row
+    .large-10.columns
+      - if notice
+        p.notice= notice
+      - if alert
+        p.alert= alert
+  
+  .row
+    .large-10.columns
+      = yield
 
   = javascript_include_tag "application", "data-turbolinks-track" => true
