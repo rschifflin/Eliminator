@@ -18,12 +18,14 @@ class Game < ActiveRecord::Base
   belongs_to :week
 
   validates :progress, inclusion: { in: %w|upcoming next live final| }
+  validates :home_team_outcome, inclusion: { in: %w|none win lose tie| }
 
-  before_validation :set_default_progress
+  before_validation :set_defaults
 
 private
-  def set_default_progress
+  def set_defaults
     self.progress ||= "upcoming"
+    self.home_team_outcome ||= "none"
     true
   end
 end

@@ -1,7 +1,8 @@
-h2 Games list
 - if @bet
-  h4 Current Bet:
-  .current-bet= @bet.team.full_name
+  .current-bet
+    | Your pick:
+    .current-bet-team-name= @bet.team.full_name
+h2 Games list
 ul#game-list
   - @week.games.each_with_index do |game, id|
     - id += 1

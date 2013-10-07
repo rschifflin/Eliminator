@@ -6,7 +6,7 @@ class GamesPage < PageObject
   end
 
   def current_bet_display
-    page.find(".current-bet").text
+    page.find(".current-bet-team-name").text
   end
 
   def place_bet(args)
