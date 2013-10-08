@@ -10,6 +10,20 @@
 #
 
 class Week < ActiveRecord::Base
+  state_machine :progress, initial: :unstarted do 
+    after_transition [:unstarted, :started] => :started do |week|
+      week.finish if week.reload.games.none? { |game| game.unstarted? } 
+    end
+
+    event :start do
+      transition [:unstarted, :started] => :started
+    end
+
+    event :finish do
+      transition :started => :finished
+    end
+  end
+
   belongs_to :season
   has_many :games
 

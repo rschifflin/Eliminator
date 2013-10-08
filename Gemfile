@@ -72,6 +72,10 @@ gem 'sidekiq-failures'
 gem 'sinatra', require: false
 gem 'slim', '>= 1.3.0' # We need to force slim's version for the management console
 
+# Using state machine to manage object state
+gem 'state_machine'
+gem 'ruby-graphviz'
+
 group :development, :test do
   # We'll write our tests in rspec
   gem 'rspec-rails'

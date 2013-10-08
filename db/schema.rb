@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20131005062416) do
 
   create_table "seasons", force: true do |t|
     t.integer  "year"
+    t.string   "progress"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -69,6 +70,7 @@ ActiveRecord::Schema.define(version: 20131005062416) do
   create_table "weeks", force: true do |t|
     t.integer  "week_no"
     t.integer  "season_id"
+    t.string   "progress"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

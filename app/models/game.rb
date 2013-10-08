@@ -13,19 +13,29 @@
 #
 
 class Game < ActiveRecord::Base
+  state_machine :progress, initial: :unstarted do
+    after_transition :unstarted => :started, do: :start_week
+    event :start do
+      transition :unstarted => :started
+    end
+  end
+
   belongs_to :home_team, class_name: "Team" 
   belongs_to :away_team, class_name: "Team"
   belongs_to :week
 
-  validates :progress, inclusion: { in: %w|upcoming next live final| }
+  validates :progress, inclusion: { in: %w|unstarted started| }
   validates :home_team_outcome, inclusion: { in: %w|none win lose tie| }
 
   before_validation :set_defaults
 
 private
   def set_defaults
-    self.progress ||= "upcoming"
     self.home_team_outcome ||= "none"
     true
+  end
+
+  def start_week
+    self.week.start
   end
 end
