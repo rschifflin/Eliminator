@@ -19,7 +19,7 @@ describe "The Games page" do
     it "shows me my current bet" do
       bet = create(:bet, user: current_user, week: week, team: teams.last)
       visit(week_games_path(week))
-      expect(games_page.current_bet_display).to eq bet.team.full_name
+      expect(games_page.current_bet_display.upcase).to eq bet.team.full_name.upcase
     end
 
     it "only shows the bet from the specified week" do
