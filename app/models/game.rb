@@ -36,6 +36,6 @@ private
   end
 
   def start_week
-    self.week.start
+    self.week.start_game
   end
 end

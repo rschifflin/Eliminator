@@ -18,5 +18,12 @@ describe Game do
     expect(Game.create.home_team_outcome).to eq("none")
   end
 
+  it "notifies its week to start when it starts" do
+    game = Game.new
+    week = double(Week)
+    game.stub(:week) { week }
+    week.should_receive(:start_game)
+    game.start
+  end
 
 end

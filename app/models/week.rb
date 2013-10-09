@@ -5,6 +5,7 @@
 #  id         :integer          not null, primary key
 #  week_no    :integer
 #  season_id  :integer
+#  progress   :string(255)
 #  created_at :datetime
 #  updated_at :datetime
 #
@@ -12,10 +13,15 @@
 class Week < ActiveRecord::Base
   state_machine :progress, initial: :unstarted do 
     after_transition [:unstarted, :started] => :started do |week|
+      week.season.start_week
       week.finish if week.reload.games.none? { |game| game.unstarted? } 
     end
 
-    event :start do
+    after_transition :started => :finished do |week|
+      week.season.finish_week
+    end
+
+    event :start_game do
       transition [:unstarted, :started] => :started
     end
 

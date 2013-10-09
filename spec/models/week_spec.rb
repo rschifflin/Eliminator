@@ -7,38 +7,61 @@ describe Week do
   it { should have_many :games }
   it { should ensure_inclusion_of(:progress).in_array(%w|unstarted started finished|) }
 
+  it "has a factory" do
+    expect(create(:week)).to be_valid
+  end
+
   it "has a week number" do
     season = create(:season, year: 2014)
     week = create(:week, week_no: 5, season: season)
     expect(week.week_no).to eq 5
   end
 
-  it "starts whenever one of its games starts" do
+  it "starts the week whenever it receives a start_game message" do
     week = create(:week)
-    game = create(:game, week: week)
-    expect { game.start }.to change { week.reload.unstarted? }.to false
+    expect { week.start_game }.to change { week.reload.unstarted? }.to false
   end
 
   it "finishes whenever all of its games finish" do
     week = create(:week)
-    game1 = create(:game, week: week)
-    game2 = create(:game, week: week)
-    game3 = create(:game, week: week)
-    game1.start
-    game2.start
-    expect { game3.start }.to change{ week.reload.finished? }.to true
+    games = [].tap { |ary| 3.times { ary << double(Game, state: "started", unstarted?: false) } }
+    week.stub(:games) { games }
+    expect { week.start_game }.to change{ week.finished? }.to true
   end
 
   it "doesn't finish when only some of its games finish" do
     week = create(:week)
-    game1 = create(:game, week: week)
-    game2 = create(:game, week: week)
-    game3 = create(:game, week: week)
-    game1.start
-    expect { game2.start }.to_not change { week.reload.finished? }.to true
+    games = [].tap do |ary| 
+      2.times { ary << double(Game, state: "started", unstarted?: false) } 
+      ary << double(Game, state: "unstarted", unstarted?: true)
+    end
+    week.stub(:games) { games }
+    expect { week.start_game }.to_not change { week.reload.finished? }.to true
   end
 
-  it "use the correct week number based on the season" do
+  it "notifies the season when it's started" do
+    week = Week.new
+    season = double(Season, 
+                    marked_for_destruction?: false, 
+                    assign_next_week_no: 1,
+                    finish_week: true)
+    week.stub(:season) { season }
+    season.should_receive(:start_week)
+    week.start_game
+  end
+
+  it "notifies the season when it's finished" do
+    week = Week.new
+    season = double(Season, 
+                    start_week: true,
+                    marked_for_destruction?: false, 
+                    assign_next_week_no: 1)
+    week.stub(:season) { season }
+    season.should_receive(:finish_week)
+    week.start_game
+  end
+
+  it "uses the correct week number based on the season" do
     old_season = create(:season, year: 2013) 
     new_season = create(:season, year: 2014) 
     weeks = create_list(:week, 16, season: old_season)
@@ -46,11 +69,8 @@ describe Week do
     expect(weeks.map{ |w| w.week_no }).to eq((1..5).to_a)
   end
 
-  it "has a factory" do
-    expect(create(:week)).to be_valid
-  end
 
-  describe "##current" do
+  describe ".current" do
     context "With no weeks" do
       it "returns nil" do
         expect(Week.current).to be_nil
@@ -67,4 +87,6 @@ describe Week do
       end
     end
   end
+
+  
 end
