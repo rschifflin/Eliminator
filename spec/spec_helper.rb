@@ -23,6 +23,9 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 #Add in our page objects
 Dir[Rails.root.join("app/pages/**/*.rb")].each {|f| require f}
 
+#Add in our service objects
+Dir[Rails.root.join("app/models/services/**/*.rb")].each {|f| require f}
+
 # Require Factory Girl and load factories
 require 'factory_girl'
 # Require our Database Cleaner to clean up after ourselves
