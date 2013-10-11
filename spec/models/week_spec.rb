@@ -19,24 +19,24 @@ describe Week do
 
   it "starts the week whenever it receives a start_game message" do
     week = create(:week)
-    expect { week.start_game }.to change { week.reload.unstarted? }.to false
+    expect { week.on_game_start }.to change { week.reload.unstarted? }.to false
   end
 
   it "finishes whenever all of its games finish" do
     week = create(:week)
-    games = [].tap { |ary| 3.times { ary << double(Game, state: "started", unstarted?: false) } }
+    games = [].tap { |ary| 3.times { ary << double(Game, state: "finished", finished?: true) } }
     week.stub(:games) { games }
-    expect { week.start_game }.to change{ week.finished? }.to true
+    expect { week.on_game_finish }.to change{ week.finished? }.to true
   end
 
   it "doesn't finish when only some of its games finish" do
     week = create(:week)
     games = [].tap do |ary| 
-      2.times { ary << double(Game, state: "started", unstarted?: false) } 
-      ary << double(Game, state: "unstarted", unstarted?: true)
+      2.times { ary << double(Game, state: "finished", finished?: true) } 
+      ary << double(Game, state: "unstarted", finished?: false)
     end
     week.stub(:games) { games }
-    expect { week.start_game }.to_not change { week.reload.finished? }.to true
+    expect { week.on_game_finish }.to_not change { week.reload.finished? }.to true
   end
 
   it "notifies the season when it's started" do
@@ -47,7 +47,7 @@ describe Week do
                     finish_week: true)
     week.stub(:season) { season }
     season.should_receive(:start_week)
-    week.start_game
+    week.on_game_start
   end
 
   it "notifies the season when it's finished" do
@@ -57,8 +57,9 @@ describe Week do
                     marked_for_destruction?: false, 
                     assign_next_week_no: 1)
     week.stub(:season) { season }
+    week.stub(:reload) { week }
     season.should_receive(:finish_week)
-    week.start_game
+    week.on_game_finish
   end
 
   it "uses the correct week number based on the season" do
@@ -67,6 +68,10 @@ describe Week do
     weeks = create_list(:week, 16, season: old_season)
     weeks = create_list(:week, 5, season: new_season)
     expect(weeks.map{ |w| w.week_no }).to eq((1..5).to_a)
+  end
+
+  describe "#game_end" do
+
   end
 
 

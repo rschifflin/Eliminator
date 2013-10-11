@@ -14,19 +14,18 @@ class Week < ActiveRecord::Base
   state_machine :progress, initial: :unstarted do 
     after_transition [:unstarted, :started] => :started do |week|
       week.season.start_week
-      week.finish if week.reload.games.none? { |game| game.unstarted? } 
     end
 
-    after_transition :started => :finished do |week|
+    after_transition [:unstarted, :started] => :finished do |week|
       week.season.finish_week
     end
 
-    event :start_game do
+    event :start do
       transition [:unstarted, :started] => :started
     end
 
     event :finish do
-      transition :started => :finished
+      transition [:unstarted, :started] => :finished
     end
   end
 
@@ -41,11 +40,20 @@ class Week < ActiveRecord::Base
     current_season.weeks.max_by{ |w| w.week_no }
   end
 
+  def on_game_start
+    self.start
+  end
+
+  def on_game_finish
+    self.finish if self.reload.games.all? { |game| game.finished? } 
+  end
+
 private
 
   def set_week_no
     self.week_no = season.assign_next_week_no if self.week_no.nil?
     true
   end
+
 
 end

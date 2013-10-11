@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Game do
   it { should belong_to(:home_team) }
   it { should belong_to(:away_team) }
-  it { should ensure_inclusion_of(:progress).in_array(%w|unstarted started|) }
+  it { should ensure_inclusion_of(:progress).in_array(%w|unstarted started finished|) }
   it { should ensure_inclusion_of(:home_team_outcome).in_array(%w|none win lose tie|) }
 
   it "has a factory" do
@@ -24,6 +24,15 @@ describe Game do
     game.stub(:week) { week }
     week.should_receive(:start_game)
     game.start
+  end
+  
+  it "notifies its week when it ends" do
+    game = Game.new
+    week = double(Week, start_game: true)
+    game.stub(:week) { week }
+    week.should_receive(:end_game)
+    game.start
+    game.finish
   end
 
 end

@@ -14,9 +14,14 @@
 
 class Game < ActiveRecord::Base
   state_machine :progress, initial: :unstarted do
-    after_transition :unstarted => :started, do: :start_week
+    after_transition :unstarted => :started, do: :notify_week_start
+    after_transition [:unstarted, :started] => :finished, do: :notify_week_end
     event :start do
       transition :unstarted => :started
+    end
+
+    event :finish do
+      transition [:unstarted, :started] => :finished
     end
   end
 
@@ -24,7 +29,7 @@ class Game < ActiveRecord::Base
   belongs_to :away_team, class_name: "Team"
   belongs_to :week
 
-  validates :progress, inclusion: { in: %w|unstarted started| }
+  validates :progress, inclusion: { in: %w|unstarted started finished| }
   validates :home_team_outcome, inclusion: { in: %w|none win lose tie| }
 
   before_validation :set_defaults
@@ -35,7 +40,11 @@ private
     true
   end
 
-  def start_week
+  def notify_week_start
     self.week.start_game
+  end
+
+  def notify_week_end
+    self.week.end_game
   end
 end
