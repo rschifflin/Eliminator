@@ -13,11 +13,11 @@
 class Week < ActiveRecord::Base
   state_machine :progress, initial: :unstarted do 
     after_transition [:unstarted, :started] => :started do |week|
-      week.season.start_week
+      week.season.on_week_start
     end
 
     after_transition [:unstarted, :started] => :finished do |week|
-      week.season.finish_week
+      week.season.on_week_finish
     end
 
     event :start do

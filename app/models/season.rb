@@ -11,15 +11,15 @@
 
 class Season < ActiveRecord::Base
   state_machine :progress, initial: :unstarted do
-    before_transition :started => :finished do |season|
+    before_transition [:unstarted, :started] => :finished do |season|
     end
 
-    event :start_week do
+    event :start do
       transition [:unstarted, :started] => :started
     end
     
-    event :finish_week do
-      transition :started => :finished , if: lambda { |season| season.reload.weeks.all? { |week| week.finished? } }
+    event :finish do
+      transition [:unstarted, :started] => :finished 
     end
   end
 
@@ -34,5 +34,13 @@ class Season < ActiveRecord::Base
   def self.current 
     return nil if Season.first.nil?
     return Season.all.max_by{ |s| s.year }
+  end
+
+  def on_week_start
+    self.start
+  end
+
+  def on_week_finish
+    self.finish if self.reload.weeks.all? { |week| week.finished? } 
   end
 end

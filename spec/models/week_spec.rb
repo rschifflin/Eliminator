@@ -17,49 +17,46 @@ describe Week do
     expect(week.week_no).to eq 5
   end
 
-  it "starts the week whenever it receives a start_game message" do
-    week = create(:week)
-    expect { week.on_game_start }.to change { week.reload.unstarted? }.to false
-  end
-
-  it "finishes whenever all of its games finish" do
-    week = create(:week)
-    games = [].tap { |ary| 3.times { ary << double(Game, state: "finished", finished?: true) } }
-    week.stub(:games) { games }
-    expect { week.on_game_finish }.to change{ week.finished? }.to true
-  end
-
-  it "doesn't finish when only some of its games finish" do
-    week = create(:week)
-    games = [].tap do |ary| 
-      2.times { ary << double(Game, state: "finished", finished?: true) } 
-      ary << double(Game, state: "unstarted", finished?: false)
+  describe "#on_game_start" do
+    let(:season) { Season.create }
+    subject(:week) { create(:week, season: season) }
+    before { season.stub(:on_week_start) }
+    
+    it "starts the week" do
+      expect { week.on_game_start }.to change { week.unstarted? }.to false
     end
-    week.stub(:games) { games }
-    expect { week.on_game_finish }.to_not change { week.reload.finished? }.to true
+
+    it "notifies the season that it's started" do
+      season.should_receive(:on_week_start)
+      week.on_game_start
+    end
   end
 
-  it "notifies the season when it's started" do
-    week = Week.new
-    season = double(Season, 
-                    marked_for_destruction?: false, 
-                    assign_next_week_no: 1,
-                    finish_week: true)
-    week.stub(:season) { season }
-    season.should_receive(:start_week)
-    week.on_game_start
-  end
+  describe "#on_game_finish" do
+    let(:season) { Season.create }
+    subject(:week) { create(:week, season: season) }
+    before do 
+      season.stub(:on_week_finish)
+      week.stub(:season) { season }
+    end
 
-  it "notifies the season when it's finished" do
-    week = Week.new
-    season = double(Season, 
-                    start_week: true,
-                    marked_for_destruction?: false, 
-                    assign_next_week_no: 1)
-    week.stub(:season) { season }
-    week.stub(:reload) { week }
-    season.should_receive(:finish_week)
-    week.on_game_finish
+    it "finishes whenever all of its games finish" do
+      games = [double(Game, state: "finished", finished?: true)] * 7
+      week.stub(:games) { games }
+      expect { week.on_game_finish }.to change{ week.finished? }.to true
+    end
+
+    it "doesn't finish when only some of its games finish" do
+      games = [double(Game, state: "finished", finished?: true)] * 2 + 
+              [double(Game, state: "unstarted", finished?: false)]
+      week.stub(:games) { games }
+      expect { week.on_game_finish }.to_not change { week.reload.finished? }.to true
+    end
+
+    it "notifies the season when it's finished" do
+      season.should_receive(:on_week_finish)
+      week.on_game_finish
+    end
   end
 
   it "uses the correct week number based on the season" do
@@ -69,11 +66,6 @@ describe Week do
     weeks = create_list(:week, 5, season: new_season)
     expect(weeks.map{ |w| w.week_no }).to eq((1..5).to_a)
   end
-
-  describe "#game_end" do
-
-  end
-
 
   describe ".current" do
     context "With no weeks" do
@@ -85,8 +77,8 @@ describe Week do
     context "With weeks in the same season" do
       it "returns the most recent week" do
         season = create(:season)
-        week1 = create(:week, season: season, week_no: 1)
-        week2 = create(:week, season: season, week_no: 2)
+        create(:week, season: season, week_no: 1)
+        create(:week, season: season, week_no: 2)
         week3 = create(:week, season: season, week_no: 3)
         expect(Week.current).to eq week3
       end
