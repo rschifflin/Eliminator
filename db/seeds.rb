@@ -97,6 +97,6 @@ matchups.each do |pair|
   Game.where(home_team: pair.first,
              away_team: pair.second,
              week: week,
-             progress: "next").first_or_create
+             progress: "unstarted").first_or_create
 end
 
