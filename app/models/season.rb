@@ -32,8 +32,7 @@ class Season < ActiveRecord::Base
   end
 
   def self.current 
-    return nil if Season.first.nil?
-    return Season.all.max_by{ |s| s.year }
+    Timekeeper.current_season_from Season.all
   end
 
   def on_week_start

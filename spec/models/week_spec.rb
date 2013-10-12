@@ -77,9 +77,10 @@ describe Week do
     context "With weeks in the same season" do
       it "returns the most recent week" do
         season = create(:season)
-        create(:week, season: season, week_no: 1)
-        create(:week, season: season, week_no: 2)
-        week3 = create(:week, season: season, week_no: 3)
+        create(:week, season: season, week_no: 1, progress: :finished)
+        create(:week, season: season, week_no: 2, progress: :finished)
+        week3 = create(:week, season: season, week_no: 3, progress: :unstarted)
+        create(:week, season: season, week_no: 4, progress: :unstarted)
         expect(Week.current).to eq week3
       end
     end

@@ -53,10 +53,10 @@ describe Season do
 
     context "With seasons" do
       it "should return the most recent season" do
-        create(:season, year: 1000)
-        create(:season, year: 2000)
-        season3 = create(:season, year: 3000)
-        expect(Season.current).to eq season3
+        create(:season, year: 1000, progress: :finished)
+        season2 = create(:season, year: 2000, progress: :started)
+        create(:season, year: 3000, progress: :unstarted)
+        expect(Season.current).to eq season2
       end
     end
   end

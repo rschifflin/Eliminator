@@ -36,8 +36,7 @@ class Week < ActiveRecord::Base
   before_save :set_week_no
 
   def self.current
-    return nil unless current_season = Season.current
-    current_season.weeks.max_by{ |w| w.week_no }
+    Timekeeper.current_week_for Season.current
   end
 
   def on_game_start
