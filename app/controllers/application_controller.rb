@@ -1,3 +1,6 @@
+#include our decorators
+Dir[Rails.root.join("app/decorators/**/*.rb")].each { |f| require f }
+
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.

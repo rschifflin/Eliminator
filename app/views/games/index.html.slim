@@ -4,11 +4,4 @@
     .current-bet-team-name= @bet.team.full_name
 h2 Games list
 ul#game-list
-  - @week.games.each_with_index do |game, id|
-    - id += 1
-    li.game-entry(data-id=id)
-      h2.subheader = game.home_team.full_name + " vs. " + game.away_team.full_name
-      .bet-home= link_to "Bet #{game.home_team.full_name}", { controller: "bets", action: "create", bet: {team_id: game.home_team_id, week_id: game.week_id } }, method: :post, class: "button radius"
-      .bet-away= link_to "Bet #{game.away_team.full_name}", { controller: "bets", action: "create", bet: {team_id: game.away_team_id, week_id: game.week_id } }, method: :post, class: "button radius"
-      br style="clear: both"
-
+  = week.show_games
