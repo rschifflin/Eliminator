@@ -1,5 +1,5 @@
 #include our decorators
-Dir[Rails.root.join("app/decorators/**/*.rb")].each { |f| require f }
+#Dir[Rails.root.join("app/decorators/**/*.rb")].each { |f| require f }
 
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
