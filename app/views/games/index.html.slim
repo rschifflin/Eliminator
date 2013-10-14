@@ -1,7 +1,4 @@
-- if @bet
-  .current-bet
-    | Your pick:
-    .current-bet-team-name= @bet.team.full_name
+= bet.show_current if bet
 h2 Games list
 ul#game-list
   = week.show_games
