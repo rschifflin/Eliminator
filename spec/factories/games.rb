@@ -4,5 +4,6 @@ FactoryGirl.define do
   factory :game do
     home_team_id ""
     away_team_id ""
+    progress :unstarted
   end
 end

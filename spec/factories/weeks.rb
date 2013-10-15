@@ -3,5 +3,6 @@
 FactoryGirl.define do
   factory :week do
     season { create(:season) }
+    progress :unstarted 
   end
 end

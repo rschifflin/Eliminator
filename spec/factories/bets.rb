@@ -3,6 +3,6 @@
 FactoryGirl.define do
   factory :bet do
     team_id 1
-    week_id { create(:week).id }
+    week { create(:week) }
   end
 end
