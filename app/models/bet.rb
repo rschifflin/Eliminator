@@ -27,7 +27,7 @@ private
   end
 
   def validate_week_progress
-    unless @bet.week.progress == :unstarted
+    unless @bet.week.progress == "unstarted" 
       @bet.errors[:base] << "This week's games have already started!"
     end
   end

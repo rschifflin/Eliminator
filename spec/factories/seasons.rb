@@ -3,6 +3,6 @@
 FactoryGirl.define do
   factory :season do
     year 1
-    progress :unstarted
+    progress "unstarted" 
   end
 end

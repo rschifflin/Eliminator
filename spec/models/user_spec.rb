@@ -27,35 +27,42 @@ describe User do
     end
 
     context "With bets in the most recent week of the most recent season" do
-      let(:season) { create(:season) }
-      let!(:bet1) { create(:bet, user: user, week: create(:week, season: season, progress: :finished)) }
-      let!(:bet2) { create(:bet, user: user, week: create(:week, season: season, progress: :finished)) }
-      let!(:bet3) { create(:bet, user: user, week: create(:week, season: season)) }
+      let(:weeks) { [double(Week), double(Week), double(Week)] }
+      let!(:bet1) { double(Bet, week: weeks[0]) }
+      let!(:bet2) { double(Bet, week: weeks[1]) }
+      let!(:bet3) { double(Bet, week: weeks[2]) }
+      #let!(:bet1) { double(Bet) { user: user, } create(:bet, user: user, week: create(:week, season: season, progress: :finished)) }
+      #let!(:bet2) { create(:bet, user: user, week: create(:week, season: season, progress: :finished)) }
+      #let!(:bet3) { create(:bet, user: user, week: create(:week, season: season)) }
       it "returns the bet" do
+        Week.stub(:current) { weeks[2] }
+        user.stub(:bets) { [bet1, bet2, bet3] }
         expect(user.current_bet).to eq bet3
       end
     end
 
     context "With bets in multiple seasons" do
-      let(:old_season) { create(:season, year: 1990, progress: :finished) }
-      let(:new_season) { create(:season, year: 2020) }
-      let!(:old_week_1) { create(:week, season: old_season) }
-      let!(:new_week_1) { create(:week, season: new_season) }
-      let!(:old_week_2) { create(:week, season: old_season) }
-      let!(:bet1) { create(:bet, user: user, week: old_week_1) }
-      let!(:bet2) { create(:bet, user: user, week: new_week_1) }
-      let!(:bet3) { create(:bet, user: user, week: old_week_2) }
+      let(:old_week_1) { double(Week) }
+      let(:new_week_1) { double(Week) }
+      let(:old_week_2) { double(Week) }
+      let(:bet1) { double(Bet, week: old_week_1) }
+      let(:bet2) { double(Bet, week: new_week_1) }
+      let(:bet3) { double(Bet, week: old_week_2) }
 
       it "returns the bet of the latest season+week" do
+        Week.stub(:current) { new_week_1 } 
+        user.stub(:bets) { [bet1, bet2, bet3] }
         expect(user.current_bet).to eq bet2
       end
     end
 
     context "With only old bets" do
-        let(:season) { create(:season) } 
-        let!(:bets) { create_list(:bet, 10, user: user, week: create(:week, season: season, progress: :finished)) } 
-        let!(:empty_week) { create(:week, season: season) }
+      let(:old_week) { double(Week) }
+      let(:new_week) { double(Week) }
+      let(:bets) { [double("Bet", week: :old_week), double("Bet", week: :old_week), double("Bet", week: :old_week)] }
       it "returns nil" do
+        Week.stub(:current) { new_week }
+        user.stub(:bets) { bets }
         expect(user.current_bet).to eq nil
       end
     end

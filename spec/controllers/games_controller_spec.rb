@@ -23,12 +23,13 @@ describe GamesController do
 
   context "With a signed-in user without a current bet" do
     let(:user) { create(:user) }
-    let(:old_season) { create(:season, year: 1975, progress: :finished) }
+    let(:old_season) { create(:season, year: 1975) }
     let(:new_season) { create(:season, year: 2025) }
     let!(:old_week) { create(:week, season: old_season) }
     let!(:new_week) { create(:week, season: new_season) }
     let!(:bet) { create(:bet, user: user, week: old_week) }
     before do
+      old_season.finish
       sign_in user
     end
 

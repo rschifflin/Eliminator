@@ -29,7 +29,6 @@ class Game < ActiveRecord::Base
   belongs_to :away_team, class_name: "Team"
   belongs_to :week
 
-  validates :progress, inclusion: { in: %w|unstarted started finished| }
   validates :home_team_outcome, inclusion: { in: %w|none win lose tie| }
 
   before_validation :set_defaults
